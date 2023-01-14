@@ -2,6 +2,7 @@ package com.samuelmakambo.listordenacao;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -23,16 +24,34 @@ public class ExemploOrdenacaoList {
             add(new Gato("Simba", 6, "tigrado"));
             add(new Gato("Jon", 18, "amarelo"));
         }};
-        
-       // System.out.println(meusGatos.toString());
-        
-        System.out.println("--\tOrdem de Inserção");
-        System.out.println(meusGatos.toString());
-        
-        System.out.println("--\tOrdem aleatória");
+        meusGatos.sort(Comparator.comparing(Gato::getNome));
+
+
+        System.out.println("--\tOrdem de Inserção\t---");
+        System.out.println(meusGatos);
+
+        System.out.println("--\tOrdem aleatória\t---");
         Collections.shuffle(meusGatos);
-        System.out.println(meusGatos.toString());
-       
+        System.out.println(meusGatos);
+
+        System.out.println("--\tOrdem Natural (Nome)\t---");
+        Collections.sort(meusGatos);
+        System.out.println(meusGatos);
+
+        System.out.println("--\tOrdem Idade\t---");
+//        Collections.sort(meusGatos, new ComparatorIdade());
+        meusGatos.sort(new ComparatorIdade());
+        System.out.println(meusGatos);
+
+        System.out.println("--\tOrdem cor\t---");
+//        Collections.sort(meusGatos, new ComparatorCor());
+        meusGatos.sort(new ComparatorCor());
+        System.out.println(meusGatos);
+
+        System.out.println("--\tOrdem Nome/Cor/Idade\t---");
+//        Collections.sort(meusGatos, new ComparatorNomeCorIdade());
+        meusGatos.sort(new ComparatorNomeCorIdade());
+        System.out.println(meusGatos);
     }
 }
 
@@ -59,8 +78,6 @@ class Gato implements Comparable<Gato>{
         return cor;
     }
 
-    // é necessario o método toString para não imprimir o endereço de memoria.
-    
     @Override
     public String toString() {
         return "{" +
@@ -69,17 +86,41 @@ class Gato implements Comparable<Gato>{
                 ", cor='" + cor + '\'' +
                 '}';
     }
-    
-    /*
-     * Caso este metodo retornar zero os nomes são iguais
-     * 
-     */
 
-	@Override
-	public int compareTo(Gato gato) {
-		
-		return this.getNome().compareToIgnoreCase(gato.getNome());
-	}
+    @Override
+    public int compareTo(Gato gato) {
+        return this.getNome().compareToIgnoreCase(gato.getNome());
+    }
+}
+
+class ComparatorIdade implements Comparator<Gato> {
+    @Override
+    public int compare(Gato g1, Gato g2) {
+        return Integer.compare(g1.getIdade(), g2.getIdade());
+    }
+}
+
+class ComparatorCor implements Comparator<Gato> {
+
+    @Override
+    public int compare(Gato g1, Gato g2) {
+        return g1.getCor().compareToIgnoreCase(g2.getCor());
+    }
+}
+
+class ComparatorNomeCorIdade implements Comparator<Gato> {
+
+    @Override
+    public int compare(Gato g1, Gato g2) {
+        int nome = g1.getNome().compareToIgnoreCase(g2.getNome());
+        if (nome != 0) return nome;
+
+        int cor = g1.getCor().compareToIgnoreCase(g2.getCor());
+        if(cor !=0) return cor;
+
+        return Integer.compare(g1.getIdade(), g2.getIdade());
+
+    }
 
 }
 	
